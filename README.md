@@ -2,10 +2,10 @@
 
 Exports gauge roomname/participant count
 
-Output: 
+Output:
 
-```
-bbb_meetings{meeting="MeetingName"} 20 
+```text
+bbb_meetings{meeting="MeetingName"} 20
 ```
 
 ## Docker
@@ -30,6 +30,10 @@ Add `--debug` for more info
     networks:
       - monitor-net
 ```
+
+## Todo
+
+1. Cleanup
 
 ## Credits
 
