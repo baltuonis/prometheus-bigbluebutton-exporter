@@ -1,4 +1,4 @@
-IMAGE 		?= bigbluebutton-exporter
+IMAGE 		?= baltuonis/prometheus-bigbluebutton-exporter
 VERSION 	= $(shell git describe --always --tags --dirty)
 GO_PACKAGES = $(shell go list ./... | grep -v /vendor/)
 
@@ -24,6 +24,7 @@ docker:
 		-t $(IMAGE):$(VERSION) \
 		.
 	docker tag $(IMAGE):$(VERSION) $(IMAGE):latest
+	docker tag $(IMAGE):$(VERSION) $(IMAGE):0.1
 
 version:
 	echo $(DOCKER_IMAGE_TAG)

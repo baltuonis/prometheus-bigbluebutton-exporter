@@ -22,7 +22,7 @@ Add `--debug` for more info
 
 ```yaml
   bbbexporter:
-    image: bigbluebutton-exporter:latest
+    image: baltuonis/prometheus-bigbluebutton-exporter
     restart: unless-stopped
     command: ["--bbb.api" ,"https://yoursite.com/bigbluebutton/api/", "--bbb.secret", "secret"]
     ports:
@@ -34,6 +34,7 @@ Add `--debug` for more info
 ## Todo
 
 1. Cleanup
+2. Setup CI/CD to dockerhub
 
 ## Credits
 
