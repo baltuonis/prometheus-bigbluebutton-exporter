@@ -6,36 +6,11 @@ type GetMeetingsResponse struct {
 	Meetings   meetings `xml:"meetings"`
 }
 
-//-----------------------------------------------------------------------------
-// 建立会议室返回XML的数据结构, 即create接口调用的返回值实例
-type CreateMeetingResponse struct {
-	Returncode           string `xml:"returncode"`           // 是否成功
-	MeetingID            string `xml:"meetingID"`            // 会议ID
-	CreateTime           string `xml:"createTime"`           // 会议创建时间
-	AttendeePW           string `xml:"attendeePW"`           // 与会者密码
-	ModeratorPW          string `xml:"moderatorPW"`          // 会议管理员密码
-	HasBeenForciblyEnded string `xml:"hasBeenForciblyEnded"` // 是否可以被强制结束
-	MessageKey           string `xml:"messageKey"`           // 返回消息Key
-	Message              string `xml:"message"`              // 返回消息
-}
-
-//-----------------------------------------------------------------------------
-// 检查会议室是否在运行返回XML的数据结构, 即isMeetingRunning接口调用的返回值实例
 type IsMeetingRunningResponse struct {
 	ReturnCode string `xml:"returncode"` // 是否成功
 	Running    bool   `xml:"running"`    // 会议室状态
 }
 
-//-----------------------------------------------------------------------------
-// 关闭会议室返回XML的数据结构, 即end接口调用的返回值实例
-type EndResponse struct {
-	ReturnCode string `xml:"returncode"` // 是否成功
-	MessageKey string `xml:"messageKey"` // 返回消息Key
-	Message    string `xml:"message"`    // 返回消息
-}
-
-//-----------------------------------------------------------------------------
-// 获取会议信息返回XML的数据结构, 即getMeetingInfo接口调用的返回值实例
 type GetMeetingInfoResponse struct {
 	ReturnCode            string    `xml:"returncode"`            // 是否成功
 	MeetingName           string    `xml:"meetingName"`           // 会议名称

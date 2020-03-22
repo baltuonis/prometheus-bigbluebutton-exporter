@@ -24,7 +24,7 @@ docker:
 		-t $(IMAGE):$(VERSION) \
 		.
 	docker tag $(IMAGE):$(VERSION) $(IMAGE):latest
-	docker tag $(IMAGE):$(VERSION) $(IMAGE):0.1
+	docker tag $(IMAGE):$(VERSION) $(IMAGE):0.2
 
 version:
 	echo $(DOCKER_IMAGE_TAG)

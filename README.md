@@ -38,4 +38,4 @@ Add `--debug` for more info
 
 ## Credits
 
-Took some code form https://github.com/MsloveDl/bbb4go
+Took some code from https://github.com/MsloveDl/bbb4go

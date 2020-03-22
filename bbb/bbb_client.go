@@ -18,24 +18,25 @@ type BBBClient struct {
 func (bbbClient *BBBClient) GetMeetings() *models.GetMeetingsResponse {
 	checksum := command.GetChecksum("getMeetings", "", bbbClient.Secret)
 
-	createResponse := command.HttpGet(bbbClient.BaseURL + "getMeetings?checksum=" + checksum)
+	bbbResponse := command.HttpGet(bbbClient.BaseURL + "getMeetings?checksum=" + checksum)
 
-	if "ERROR" == createResponse {
-		log.Println("ERROR: HTTP ERROR.")
+	if "ERROR" == bbbResponse {
+		log.Println("GetMeetings: HTTP ERROR.")
 		return nil
 	}
 
 	var response models.GetMeetingsResponse
-	err := xml.Unmarshal([]byte(createResponse), &response)
+	err := xml.Unmarshal([]byte(bbbResponse), &response)
 
 	if nil != err {
-		log.Println("XML PARSE ERROR: " + err.Error())
+		log.Println("GetMeetings: XML PARSE ERROR: " + err.Error())
+		log.Println("GetMeetings: BBB server response: " + bbbResponse)
 		return nil
 	}
 
 	if "SUCCESS" == response.ReturnCode {
 		if bbbClient.Debug {
-			log.Println("GET MEETING INFO SUCCESS.")
+			log.Println("GetMeetings: REQUEST SUCCESS.")
 		}
 		return &response
 	}

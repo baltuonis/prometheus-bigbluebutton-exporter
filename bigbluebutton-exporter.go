@@ -71,16 +71,15 @@ func (e *bbbExporter) Describe(ch chan<- *prometheus.Desc) {
 func (e *bbbExporter) scrape(gv *prometheus.GaugeVec) {
 	var meetingsInfo = e.client.GetMeetings()
 	if meetingsInfo == nil {
-		log.Println("Meetings is nil")
-		return
-	}
+		log.Println("scarpe: Failed to receive meeting data")
+	} else {
+		var meetings = meetingsInfo.Meetings.Meetings
 
-	var meetings = meetingsInfo.Meetings.Meetings
-
-	for _, e := range meetings {
-		gv.WithLabelValues(
-			e.MeetingName,
-		).Set(float64(e.ParticipantCount))
+		for _, e := range meetings {
+			gv.WithLabelValues(
+				e.MeetingName,
+			).Set(float64(e.ParticipantCount))
+		}
 	}
 }
 

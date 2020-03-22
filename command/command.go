@@ -9,13 +9,7 @@ import (
 	"reflect"
 )
 
-/*******************************************************************************
-* 根据请求的接口, 参数以及公钥生成密文
-* 参数: method, 请求的接口
-*	   param, 请求携带的参数
-*      salt, 服务器提供的公钥
-* 返回: 加密后的checksum密文
-*******************************************************************************/
+// GetChecksum - calculates BBB checksum based on Method, Param & Secret (salt)
 func GetChecksum(method string, param string, salt string) string {
 	private := []byte(method + param + salt)
 	ciphertext := sha1.Sum(private)
@@ -23,11 +17,7 @@ func GetChecksum(method string, param string, salt string) string {
 	return hex.EncodeToString(ciphertext[:])
 }
 
-/*******************************************************************************
-* 执行HTTP GET请求, 返回请求结果
-* 参数: url, 携带参数的请求地址
-* 返回: 请求结果, 如果返回ERROR说明请求过程中出错, 详细信息可以查看log
-*******************************************************************************/
+// HttpGet - makes HTTP GET request
 func HttpGet(url string) string {
 	response, err := http.Get(url)
 
@@ -48,15 +38,6 @@ func HttpGet(url string) string {
 	return string(body)
 }
 
-/*******************************************************************************
-* 将Struct转换为Map格式
-* type demo struct {              key    value
-*     id string        ----\      id     001
-*     name string      ----/      name   名字
-* }
-* 参数: obj, 需要转换的结构体实例
-* 返回: Map类型的结果
-*******************************************************************************/
 func Struct2Map(obj interface{}) map[string]interface{} {
 	t := reflect.TypeOf(obj)
 	v := reflect.ValueOf(obj)
