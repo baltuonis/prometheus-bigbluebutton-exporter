@@ -8,6 +8,13 @@ Output:
 bbb_meetings{meeting="MeetingName"} 20
 ```
 
+## Linux service
+
+1. `cp ./etc/systemd/system/bbb-exporter.service /etc/systemd/system/`
+2. Replace BBB endpoint & secret
+3. `sudo systemctl enable bbb-exporter.service`
+4. `sudo systemctl start bbb-exporter.service`
+
 ## Docker
 
 ```bash
