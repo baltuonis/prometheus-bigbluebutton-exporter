@@ -33,8 +33,9 @@ make docker
 docker container run --rm -p 9688:9688 bigbluebutton-exporter --bbb.api=https://yoursite.com/bigbluebutton/api/ --bbb.secret=secret
 ```
 
-Add `--debug` for more debug info
-Add `--privacy` to use InternalMeetingId instead of MeetingName (for privacy reasons)
+Add `--debug` for more debug info.
+
+Add `--privacy` to use InternalMeetingId instead of MeetingName (for privacy reasons).
 
 ## Docker-compose
 
