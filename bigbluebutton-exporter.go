@@ -22,7 +22,9 @@ import (
 const (
 	Namespace         = "bbb"
 	LabelMeeting      = "meeting"
-	LabelParticipants = "participants"
+	LabelConnection   = "connection"
+	LabelMedia  = "media"
+	
 )
 
 var (
@@ -40,12 +42,25 @@ var (
 	Version = "N/A"
 
 	// labels are the static labels that come with every metric
-	labels = []string{LabelMeeting}
+	labelsEvents = []string{LabelMeeting, LabelConnection}
+	labelsParticipants = []string{LabelMeeting, LabelMedia}
+	labelsRecording = []string{LabelMeeting}
+	
 
-	eventOpts = prometheus.GaugeOpts{
+	meetingOpts = prometheus.GaugeOpts{
 		Name:      "meetings",
 		Namespace: Namespace,
-		Help:      "Gauge for BigBlueButton meetings",
+		Help:      "Gauge for participants in BigBlueButton meetings",
+	}
+	participantsOpts = prometheus.GaugeOpts{
+		Name:      "participants",
+		Namespace: Namespace,
+		Help:      "Gauge for active users in BigBlueButton meetings",
+	}
+	recordingsOpts = prometheus.GaugeOpts{
+		Name:      "recording",
+		Namespace: Namespace,
+		Help:      "Gauge if BigBlueButton meetings re recorded",
 	}
 )
 
@@ -54,21 +69,37 @@ type bbbExporter struct {
 }
 
 func (e *bbbExporter) Collect(ch chan<- prometheus.Metric) {
-	gv := prometheus.NewGaugeVec(eventOpts, labels)
-	e.scrape(gv)
-	gv.Collect(ch)
+	mgv := prometheus.NewGaugeVec(meetingOpts, labelsEvents)
+	pgv := prometheus.NewGaugeVec(participantsOpts, labelsParticipants)
+	rgv := prometheus.NewGaugeVec(recordingsOpts, labelsRecording)
+	e.scrape(mgv, pgv, rgv)
+	mgv.Collect(ch)
+	pgv.Collect(ch)
+	rgv.Collect(ch)
 }
 
 func (e *bbbExporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- prometheus.NewDesc(
-		prometheus.BuildFQName(eventOpts.Namespace, eventOpts.Subsystem, eventOpts.Name),
-		eventOpts.Help,
-		labels,
+		prometheus.BuildFQName(meetingOpts.Namespace, meetingOpts.Subsystem, meetingOpts.Name),
+		meetingOpts.Help,
+		labelsEvents,
+		nil,
+	)
+	ch <- prometheus.NewDesc(
+		prometheus.BuildFQName(participantsOpts.Namespace, participantsOpts.Subsystem, participantsOpts.Name),
+		participantsOpts.Help,
+		labelsParticipants,
+		nil,
+	)
+	ch <- prometheus.NewDesc(
+		prometheus.BuildFQName(recordingsOpts.Namespace, recordingsOpts.Subsystem, recordingsOpts.Name),
+		recordingsOpts.Help,
+		labelsRecording,
 		nil,
 	)
 }
 
-func (e *bbbExporter) scrape(gv *prometheus.GaugeVec) {
+func (e *bbbExporter) scrape(mgv *prometheus.GaugeVec, pgv *prometheus.GaugeVec, rgv *prometheus.GaugeVec) {
 	var meetingsInfo = e.client.GetMeetings()
 	if meetingsInfo == nil {
 		log.Println("scarpe: Failed to receive meeting data")
@@ -76,9 +107,29 @@ func (e *bbbExporter) scrape(gv *prometheus.GaugeVec) {
 		var meetings = meetingsInfo.Meetings.Meetings
 
 		for _, e := range meetings {
-			gv.WithLabelValues(
-				e.MeetingName,
-			).Set(float64(e.ParticipantCount))
+			mgv.WithLabelValues(
+				e.InternalMeetingID,
+				"listener",
+			).Set(float64(e.ListenerCount))
+			mgv.WithLabelValues(
+				e.InternalMeetingID,
+				"interactive",
+			).Set(float64(e.ParticipantCount - e.ListenerCount))
+			pgv.WithLabelValues(
+				e.InternalMeetingID,
+				"audio",
+			).Set(float64(e.VoiceParticipantCount))
+			pgv.WithLabelValues(
+				e.InternalMeetingID,
+				"video",
+			).Set(float64(e.VideoCount))
+			recordingActive := 0.0
+			if (e.Recording) {
+				recordingActive = 1.0
+			}
+			rgv.WithLabelValues(
+				e.InternalMeetingID,
+			).Set(recordingActive)
 		}
 	}
 }
