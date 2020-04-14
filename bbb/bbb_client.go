@@ -22,6 +22,9 @@ func (bbbClient *BBBClient) GetMeetings() *models.GetMeetingsResponse {
 
 	if "ERROR" == bbbResponse {
 		log.Println("GetMeetings: HTTP ERROR.")
+		if bbbClient.Debug {
+			log.Println(bbbResponse)
+		}
 		return nil
 	}
 
@@ -39,6 +42,10 @@ func (bbbClient *BBBClient) GetMeetings() *models.GetMeetingsResponse {
 			log.Println("GetMeetings: REQUEST SUCCESS.")
 		}
 		return &response
+	}
+
+	if bbbClient.Debug {
+		log.Println("GetMeetings: REQUEST FAILED.: \n\n" + bbbResponse)
 	}
 
 	return nil

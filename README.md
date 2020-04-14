@@ -1,11 +1,21 @@
 # Prometheus BigBlueButton exporter
 
-Exports gauge roomname/participant count
+Exports gauges for BigBlueButton meetings/participants/streams + recording 
 
 Output:
 
 ```text
-bbb_meetings{meeting="MeetingName"} 20
+# HELP bbb_participants Gauge for participants in BigBlueButton meetings
+# TYPE bbb_participants gauge
+bbb_participants{connection="interactive",meeting="MeetingName"} 5
+bbb_participants{connection="listener",meeting="MeetingName"} 1
+# HELP bbb_recording Gauge if BigBlueButton meetings are recorded
+# TYPE bbb_recording gauge
+bbb_recording{meeting="MeetingName"} 0
+# HELP bbb_streams Gauge for active streams in BigBlueButton meetings
+# TYPE bbb_streams gauge
+bbb_streams{media="audio",meeting="MeetingName"} 5
+bbb_streams{media="video",meeting="MeetingName"} 4
 ```
 
 ## Linux service
@@ -23,7 +33,8 @@ make docker
 docker container run --rm -p 9688:9688 bigbluebutton-exporter --bbb.api=https://yoursite.com/bigbluebutton/api/ --bbb.secret=secret
 ```
 
-Add `--debug` for more info
+Add `--debug` for more debug info
+Add `--privacy` to use InternalMeetingId instead of MeetingName (for privacy reasons)
 
 ## Docker-compose
 
