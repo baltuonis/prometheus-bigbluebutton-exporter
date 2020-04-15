@@ -7,7 +7,7 @@ Output:
 ```text
 # HELP bbb_participants Gauge for participants in BigBlueButton meetings
 # TYPE bbb_participants gauge
-bbb_participants{connection="interactive",meeting="MeetingName"} 5
+bbb_participants{connection="interactive",meeting="MeetingName"} 4
 bbb_participants{connection="listener",meeting="MeetingName"} 1
 # HELP bbb_recording Gauge if BigBlueButton meetings are recorded
 # TYPE bbb_recording gauge
