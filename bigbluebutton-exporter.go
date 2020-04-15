@@ -117,7 +117,7 @@ func (e *bbbExporter) scrape(pgv *prometheus.GaugeVec, sgv *prometheus.GaugeVec,
 			}
 
 			pgv.WithLabelValues(name, "listener").Set(float64(e.ListenerCount))
-			pgv.WithLabelValues(name, "interactive").Set(float64(e.ParticipantCount - e.VoiceParticipantCount))
+			pgv.WithLabelValues(name, "interactive").Set(float64(e.ParticipantCount - e.ListenerCount))
 			sgv.WithLabelValues(name, "audio").Set(float64(e.VoiceParticipantCount))
 			sgv.WithLabelValues(name, "video").Set(float64(e.VideoCount))
 			rgv.WithLabelValues(name).Set(recordingActive)
